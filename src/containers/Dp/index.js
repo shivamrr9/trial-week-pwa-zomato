@@ -32,6 +32,7 @@ class Dp extends Component {
        height="100px"
        width="80%"
        src="https://res.cloudinary.com/arorashivam-com-resume/image/upload/v1555929183/zomato-logo_v0erpj.png" 
+       alt="zomoto-logo"
        style={{marginBottom:'15px'}}
        />
        <div style={{marginBottom:'15px'}}>

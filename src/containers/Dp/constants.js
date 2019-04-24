@@ -13,4 +13,8 @@ export const Constants = keyMirror({
     TO_BE_CHECKED_FOR_DELETE: null,
     IMAGES_AFTER_DELETION: null,
     IMAGES_AFTER_UNDO: null,
+    OPTIMIZING_COUNTER: null,
+    TAGS_INPUT_DATA: null,
+    IMAGES_AFTER_ADDING_TAGS: null,
+    SELECTED_TAB: null
 });

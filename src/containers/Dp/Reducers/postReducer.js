@@ -1,61 +1,86 @@
 
 import { Constants } from '../constants';
-import { ActionSchedule } from 'material-ui/svg-icons';
 
 const initialState = {
     test:5,
     response:{},
     Postresponse:{},
     visibility:false,
+    loaderString:null,
     googleResponse:null,
     imagesOnLocal:null,
     imagesToBeDeleted: null,
-    undo: null
+    undo: null,
+    currentCount:1,
+    totalCount: 0,
+    tagsData:null,
+    isTagAdded:false,
+    selectedTabValue:0
 };
 
 export default function (state = initialState, action) {
     switch (action.type) {
         case Constants.TEST_VALUE:
-                return{
+                return{...state,
                     test: action.flag
                 }
         case Constants.API_CALL_TEST:
-                return{
+                return{...state,
                     response: action.response,
                 }
         case Constants.POST_API_RESPONSE:
-                return{
+                return{...state,
                     Postresponse: action.data
                 }
         case Constants.SHOW_LOADER:
-                return{
-                    visibility:action.visibility
+                return{...state,
+                    visibility:action.visibility,
+                    loaderString: action.loaderString
                 }
         case Constants.HIDE_LOADER:
-                return{
+                return{...state,
                     visibility:action.visibility
                 }
         case Constants.GOOGLE_LOGIN_DETAILS:
-                return{
+                return{...state,
                     googleResponse:action.response
                 }
         case Constants.UPLOADED_ON_LOCAL_IMAGES:
-                return{
+                return{...state,
                     imagesOnLocal: action.imagesReceived
                 }
         case Constants.TO_BE_CHECKED_FOR_DELETE:
-                return{
+                return{...state,
                     imagesOnLocal: action.imagesReceivedWithChange,
                 }
         case Constants.IMAGES_AFTER_DELETION:
-                return{
+                return{...state,
                     imagesOnLocal: action.imagesAfterDeletion,
                     imagesToBeDeleted: action.imagesToBeDeleted
                 }
         case Constants.IMAGES_AFTER_UNDO:
-                return{
+                return{...state,
                     imagesOnLocal: action.combinedImages,
                     undo: true
+                }
+        case Constants.OPTIMIZING_COUNTER:
+                return{...state,
+                    currentCount: action.currentCount,
+                    totalCount: action.totalCount
+                }
+        case Constants.TAGS_INPUT_DATA:
+                return{...state,
+                    tagsData:action.tagsString
+                }
+        case Constants.IMAGES_AFTER_ADDING_TAGS:
+                return{...state,
+                    imagesOnLocal: action.imagesArray,
+                    isTagAdded: true
+                }
+        case Constants.SELECTED_TAB:
+        console.log("tab selected: ",action.selectedTab);
+                return{...state,
+                    selectedTabValue:action.selectedTab
                 }
                 
         default:

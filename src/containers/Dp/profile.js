@@ -8,12 +8,15 @@ import {
 	showUploadedImages,
 	onCheckForDelete,
 	deleteSelectedImages,
-	undoAction
+	undoAction,
+	optimizeLoader,
+	fileCount,
+	recordTags,
+	addTagsToPhotos,
+	selectedTab
 } from './actions.js';
 import styles from './styles.scss';
 import CircularProgress from '@material-ui/core/CircularProgress';
-import { GoogleLogin } from 'react-google-login';
-import FacebookLogin from 'react-facebook-login';
 import Row from 'react-bootstrap/Row';
 import Container from 'react-bootstrap/Container';
 import Col from 'react-bootstrap/Col';
@@ -29,6 +32,10 @@ import IconButton from '@material-ui/core/IconButton';
 import CloseIcon from '@material-ui/icons/Close';
 import { stat } from 'fs';
 import Icon from '@material-ui/core/Icon';
+import {compressImage} from '../../components/imageUtilities';
+import Tabs from '@material-ui/core/Tabs';
+import Tab from '@material-ui/core/Tab';
+import Paper from '@material-ui/core/Paper';
 
 class Profile extends Component {
 
@@ -49,13 +56,50 @@ class Profile extends Component {
 	}
 
 	onDrop(acceptedFiles,rejectedFiles){
-            let sendFiles = [];
+							this.props.optimizeLoader(true,"Optimizing");
+							this.props.fileCount(1,acceptedFiles.length);
+        if (rejectedFiles && rejectedFiles.length) {
+            alert('File is not allowed');
+        } else {
+            let size = 20 * 1024 * 1024;
+            let sendFiles = [], groupUploadFiles = [];
+						let fileCount = 0;
+						console.log("original files:",acceptedFiles);
             acceptedFiles.forEach((file) => {
-												file.isCheckedForDelete=false;
-												file.tags=null;
-												sendFiles.push(file);
+                compressImage(file, { quality: 2, jpegQuality: .4 }).then((processedImage) => {
+                    let fileUpdated = new File([processedImage], `${Date.now()}_zomato_trial_insta.jpg`, {
+                        type: 'image/jpeg',
+												lastModified: Date.now(),
+										}
+										);
+										fileUpdated.preview = file.preview;
+										this.props.fileCount(fileCount,acceptedFiles.length);
+                    if (fileUpdated.size > size) {
+                        alert(`files have size greater than 20mb , Kindly upload a smaller files`);
+                    } else {
+                        if (fileUpdated.size > size) {
+                            groupUploadFiles.push(sendFiles);
+                            size = 20 * 1024 * 1024;
+                            sendFiles = [];
+                        }
+                        if (fileUpdated.size <= size) {
+                            sendFiles.push(fileUpdated);
+                            size = size - fileUpdated.size;
+                        }
+												 fileCount++;
+												 console.log("file count:",fileCount);
+                    }
+                    if (acceptedFiles.length && fileCount === acceptedFiles.length) {
+                        this.props.optimizeLoader(false);
+												groupUploadFiles.push(sendFiles);
+                        groupUploadFiles.map((uploadFiles) => {
+													console.log("compressed version: ",uploadFiles);
+												this.props.showUploadedImages(uploadFiles);
+                        });
+                    }
+                });
 						});
-							this.props.showUploadedImages(sendFiles);
+        }
 	}
 
   render() {
@@ -63,6 +107,26 @@ class Profile extends Component {
 	 return (
 		<div>
 			<Header />
+			<Paper square>
+			<Tabs
+					style={{color:'red'}}
+          indicatorColor="primary"
+          textColor="primary"
+					onChange={(event,value)=>{this.props.selectedTab(value)}}
+					value={this.props.selectedTabValue}
+					centered
+        >
+					<Tab 
+						label="Photos" 
+					/>
+					<Tab 
+						label="Upload Photos" 
+						disabled={false}
+						/>
+      </Tabs>
+			</Paper>
+			{this.props.selectedTabValue ?
+			<div className="upload-photo-view">
 			<Container>
     <Row className="col-center">
       <Col md={2}>
@@ -88,22 +152,30 @@ class Profile extends Component {
 				</Col>
 				<Col md={4}>
 				<Tooltip title="To enter multiple tags use comma (,)" placement="bottom">
-					<TextField
-								id="standard-dense"
-								label="Tags"
-								// className={classNames(classes.textField, classes.dense)}
-							/>
+				<input 
+						type="text" 
+						placeholder="Enter Tags"
+						onChange={(val)=>{this.props.recordTags(val.target.value)}}
+					/>
         </Tooltip>
 					
 				</Col>
 				<Col md={2}>
+				
 				<div>
+					{this.props.isTagAdded ?
 					<Button variant="contained" color="secondary">
 							Added
-					</Button>
-					<Button variant="contained" color="primary" onClick={()=>{this.addTagsToPhotos()}}>
+					</Button> :
+					<Button 
+						variant="contained" 
+						color="primary" 
+						onClick={()=>{this.props.addTagsToPhotos(this.props.tagsData,this.props.imagesOnLocal)}}
+						disabled={this.props.tagsData ? false : true}
+						>
 					 	Add
 					</Button>
+					}
 					</div>
 				
 				</Col>
@@ -111,7 +183,10 @@ class Profile extends Component {
 			<div style={{border:'1px solid #E0E0E0',boxShadow: '2px 2px 2px 2px #E0E0E0',marginTop:'50px'}}>
 				<Row>
 					{this.props.imagesOnLocal.map(obj=>{
-							return <Col md={4}><img style={{padding:'10px'}} height="200px" width="220px" src={obj.preview} />
+							return <Col md={4}><img style={{padding:'10px'}} height="200px" width="220px" src={obj.preview} alt="images" />
+							{obj.tags &&
+								<span>{obj.tags.toString()}</span>
+							}
 							<Checkbox
 								checked={obj.isCheckedForDelete}
 								onChange={(val)=>{this.onCheckForDelete(val.target.checked,obj,this.props.imagesOnLocal)}}
@@ -158,11 +233,23 @@ class Profile extends Component {
 			</Col>
 			</Row>
 		</Container>
+		</div> : 
+		<div className="photos-view">
+			Photos View for Grid and List Layout
+		</div>
+		}
   	  {this.props.visibility &&
 			 <div className="full-loader">
 				<div className="relative">
 				  <div className="abs" id='full-screen-loader-wrapper'>
 					 <CircularProgress size={50} thickness={5} />
+					 {/* <span style={{color:'white'}}>` ${this.props.currentCount}  ${this.props.totalCount}`</span> */}
+					 <span style={{color:'white'}}>
+						{`
+						${this.props.loaderString} `}
+						{this.props.currentCount>0 && this.props.totalCount>0 && 
+						this.props.currentCount}/{this.props.totalCount}
+					 </span>
 				  </div>
 				</div>
 			 </div>
@@ -207,7 +294,13 @@ const mapStateToProps = state => ({
 	imagesOnLocal: state.postReducer.imagesOnLocal,
 	isAnyCheckBoxChecked: state.postReducer.isAnyCheckBoxChecked,
 	imagesToBeDeleted: state.postReducer.imagesToBeDeleted,
-  undo: state.postReducer.undo
+	undo: state.postReducer.undo,
+	loaderString: state.postReducer.loaderString,
+	currentCount: state.postReducer.currentCount,
+	totalCount: state.postReducer.totalCount,
+	tagsData: state.postReducer.tagsData,
+	isTagAdded: state.postReducer.isTagAdded,
+	selectedTabValue: state.postReducer.selectedTabValue
 })
 
 export default connect(mapStateToProps, {
@@ -218,6 +311,11 @@ export default connect(mapStateToProps, {
 	showUploadedImages,
 	onCheckForDelete,
 	deleteSelectedImages,
-	undoAction
+	undoAction,
+	optimizeLoader,
+	fileCount,
+	recordTags,
+	addTagsToPhotos,
+	selectedTab
 })(Profile);
 

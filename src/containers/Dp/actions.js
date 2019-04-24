@@ -10,6 +10,68 @@ export function Test(flag){
     }
 }
 
+export function selectedTab(selectedTab){
+    return (dispatch) =>{
+      dispatch({
+          type: Constants.SELECTED_TAB,
+          selectedTab
+      });
+    }
+}
+
+export function addTagsToPhotos(tags,imagesArray){
+  if(tags && tags.length){
+  let tagsArray = [];
+  if(tags.includes(',')){
+    tagsArray = tags.split(',');
+  }
+  else{
+  tagsArray.push(tags);
+  }
+  imagesArray.forEach((obj)=>{
+    obj.tags = tagsArray;
+  });
+    return(dispatch) =>{
+        dispatch({
+          type: Constants.IMAGES_AFTER_ADDING_TAGS,
+          imagesArray
+        })
+    }
+  }
+  else{
+    alert("Enter atleast one tag")
+  }
+}
+
+export function recordTags(value){
+  console.log("entered value: ",value);
+    return (dispatch)=>{
+        dispatch({
+            type: Constants.TAGS_INPUT_DATA,
+            tagsString: value
+        });
+    }
+}
+
+export function fileCount(currentCount,totalCount){
+    return (dispatch)=>{
+      dispatch({
+          type: Constants.OPTIMIZING_COUNTER,
+          currentCount,totalCount
+      });
+    }
+}
+
+export function optimizeLoader(visibility,string){
+    return(dispatch)=>{
+      dispatch({
+          type: Constants.SHOW_LOADER,
+          visibility: visibility,
+          loaderString: string
+      });
+    }
+}
+
 export function undoAction(currentImages,deletedImages){
   let combinedImages = currentImages.concat(deletedImages)
   return (dispatch) => {
@@ -31,8 +93,6 @@ export function deleteSelectedImages(imagesOnLocal){
       imagesAfterDeletion.push(imgObj);
       }
   })
-  console.log("images after deletion: ",imagesAfterDeletion);
-  console.log("images to be delted: ",imagesToBeDeleted);
     return (dispatch) =>{
       dispatch({
           type: Constants.IMAGES_AFTER_DELETION,
@@ -59,6 +119,11 @@ export function onCheckForDelete(val,toBeCheckedImage,imagesOnLocal){
 }
 
 export function showUploadedImages(imagesReceived){
+  imagesReceived.forEach((obj)=>{
+                obj.isCheckedForDelete=false;
+     						obj.tags=null;
+  });
+
   return (dispatch) => {
             dispatch({
               type: Constants.UPLOADED_ON_LOCAL_IMAGES,
