@@ -1,0 +1,72 @@
+body{
+    // background-image: url('https://res.cloudinary.com/arorashivam-com-resume/image/upload/v1555929872/HD-Mouth-Watering-Food-Wallpapers-for-Desktop-12_acdb3e4bb37d0e3bcc26c97591d3dd6b_t1fcq3.jpg');
+    // background-repeat: no-repeat;
+    // background-size: cover;
+}
+
+.abs{
+    position:absolute;
+    top:0;
+    bottom:0;
+    left:0;
+    right:0;
+    margin:auto;
+    width: 100px;
+    height: 100px;
+        .optimizing-text{
+            color:white;
+        }
+}
+
+.relative{
+    width:100%;
+    height:100%;
+    }
+
+    .hyy{
+        color :red;
+    }
+
+    .full-loader{
+	display: flex;
+	align-items: center;
+	position:fixed;
+	width:100%;
+	height:100%;
+	left: 0;
+    top: 0;
+    background: rgba(0,0,0,0.5);
+    z-index:999;
+	.relative{
+		width:100%;
+		height:100%;
+		.abs{
+			position:absolute;
+			top:0;
+			bottom:0;
+			left:0;
+			right:0;
+			margin:auto;
+			width: 100px;
+    		height: 100px;
+		}
+	}
+    }
+
+.col-center{
+    text-align: center;
+}
+
+.user-image{
+        display: inline-block;
+        width: 25px;
+        height: 25px;
+        border-radius: 50%;
+        object-fit: cover;
+      
+}
+
+.tags-text-field{
+ 
+
+}
