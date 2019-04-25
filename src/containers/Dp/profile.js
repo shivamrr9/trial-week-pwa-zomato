@@ -148,10 +148,10 @@ class Profile extends Component {
 
 	uploadPhotos(imagesToBeUploaded){
 		console.log("total images to be uploaded: ",imagesToBeUploaded);
-		imagesToBeUploaded.map((obj)=>{
-			console.log("single single image to be upladed: ",obj);
-			this.props.uploadPhotos(obj);
-		});
+		// imagesToBeUploaded.map((obj)=>{
+			// console.log("single single image to be upladed: ",obj);
+			this.props.uploadPhotos(imagesToBeUploaded);
+		// });
 	}
 
 	closeToast(string,holdTime){

@@ -46,57 +46,60 @@ function getBase64(file) {
     reader.onload = () => resolve(reader.result);
     reader.onerror = error => reject(error);
   });
-    // var reader = new FileReader();
-    // reader.readAsDataURL(file);
-    // reader.onload = function () {
-    //      console.log(reader.result);
-    //       // console.log("x ki value:",x);
-    // };
-    // reader.onerror = function (error) {
-    //   console.log('Error: ', error);
-    // };
 }
 
-export function uploadPhotos(readyToUploadImage){
+export function uploadPhotos(readyToUploadImages){
+  console.log("images to be uploaded,",readyToUploadImages);
    return (dispatch) => {
-        getBase64(readyToUploadImage).then(function(data){
-          console.log("promise bhasad me bhi work:",data);
-          let tags = readyToUploadImage.tags || [];
-          let authEmail = JSON.parse(localStorage.getItem('user_details')).email;
-           var objToSend ={
-               "image":[data],
-               "email":authEmail,
-               "tag": tags
-              }
-              console.log("obj to send: ",objToSend);
-              debugger;
-              var url = `http://localhost:8001/imageRouter/uploadImage`;
-              dispatch({
-               type: Constants.SHOW_LOADER,
-               visibility: true,
-               loaderString: "Uploading Images.."
-           });
-              var promise = doHttpPost(url, objToSend);
-              promise.then((response) => {
-                console.log("response of upload",response);
-                dispatch({
-                  type: Constants.UPLOAD_API_RESPONSE,
-                  data: response
-                });
-                //setTimeout(() => window.location.reload(), 1000);
-                dispatch({
-                   type: Constants.HIDE_LOADER,
-                   visibility: false
+    let i;
+    let promises = [];
+    
+    for (i = 0; i < readyToUploadImages.length; ++i) {
+      promises.push(getBase64(readyToUploadImages[i]));
+    }
+    Promise.all(promises)
+          .then((results) => {
+            console.log("All done:", results);
+              let tags = readyToUploadImages[0].tags || [];
+              let authEmail = JSON.parse(localStorage.getItem('user_details')).email;
+               var objToSend ={
+                   "image":results,
+                   "email":authEmail,
+                   "tag": tags
+                  }
+                  console.log("obj to send: ",objToSend);
+                  debugger;
+                  var url = `http://localhost:8001/imageRouter/uploadImage`;
+                  dispatch({
+                   type: Constants.SHOW_LOADER,
+                   visibility: true,
+                   loaderString: "Uploading Images.."
                });
-              }, (err) => {
-               console.log("error in post call :",err);
-               dispatch({
-                   type: Constants.HIDE_LOADER,
-                  visibility: false
-               });
-              })
-        }
-      );
+                  var promise = doHttpPost(url, objToSend);
+                  promise.then((response) => {
+                    console.log("response of upload",response);
+                    dispatch({
+                      type: Constants.UPLOAD_API_RESPONSE,
+                      data: response
+                    });
+                    //setTimeout(() => window.location.reload(), 1000);
+                    dispatch({
+                       type: Constants.HIDE_LOADER,
+                       visibility: false
+                   });
+                  }, (err) => {
+                   console.log("error in post call :",err);
+                   dispatch({
+                       type: Constants.HIDE_LOADER,
+                      visibility: false
+                   });
+                  })
+           
+          })
+          .catch((e) => {
+              // Handle errors here
+          });
+       
    }
 }
 
