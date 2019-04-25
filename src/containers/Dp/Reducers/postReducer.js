@@ -19,7 +19,8 @@ const initialState = {
     openModal:null,
     emailToBeSearchedByModal:null,
     toggelView: false,
-    uploadApiResponse:null
+    uploadApiResponse:null,
+    getImagesPayload:null
 };
 
 export default function (state = initialState, action) {
@@ -100,6 +101,10 @@ export default function (state = initialState, action) {
         case Constants.UPLOAD_API_RESPONSE:
                 return{...state,
                     uploadApiResponse: action.data
+                }
+        case Constants.LOADING_IMAGES_RESPONSE:
+                return{...state,
+                    getImagesPayload: action.data
                 }
                 
         default:

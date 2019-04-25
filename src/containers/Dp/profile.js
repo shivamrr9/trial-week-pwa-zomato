@@ -17,7 +17,8 @@ import {
 	uploadPhotos,
 	openEmailModal,
 	getEmailToBeSearched,
-	changeView
+	changeView,
+	getImagesOnEmail
 } from './actions.js';
 import styles from './styles.scss';
 import CircularProgress from '@material-ui/core/CircularProgress';
@@ -45,90 +46,6 @@ import 'react-toastify/dist/ReactToastify.min.css';
 import Modal from 'react-bootstrap/Modal';
 import Switch from '@material-ui/core/Switch';
 
-const IMAGES =
-[{
-        src: "https://c2.staticflickr.com/9/8817/28973449265_07e3aa5d2e_b.jpg",
-        thumbnail: "https://c2.staticflickr.com/9/8817/28973449265_07e3aa5d2e_n.jpg",
-        thumbnailWidth: 320,
-        thumbnailHeight: 200,
-        isSelected: true,
-        caption: "After Rain (Jeshu John - designerspics.com)"
-},
-{
-        src: "https://c2.staticflickr.com/9/8356/28897120681_3b2c0f43e0_b.jpg",
-        thumbnail: "https://c2.staticflickr.com/9/8356/28897120681_3b2c0f43e0_n.jpg",
-        thumbnailWidth: 320,
-        thumbnailHeight: 200,
-        tags: [{value: "Ocean", title: "Ocean"}, {value: "People", title: "People"}],
-        caption: "Boats (Jeshu John - designerspics.com)"
-},
- 
-{
-        src: "https://c4.staticflickr.com/9/8887/28897124891_98c4fdd82b_b.jpg",
-        thumbnail: "https://c4.staticflickr.com/9/8887/28897124891_98c4fdd82b_n.jpg",
-        thumbnailWidth: 320,
-        thumbnailHeight: 200
-},
-{
-	src: "https://c5.staticflickr.com/9/8768/28941110956_b05ab588c1_b.jpg",
-	thumbnail: "https://c5.staticflickr.com/9/8768/28941110956_b05ab588c1_n.jpg",
-	thumbnailWidth: 320,
-	thumbnailHeight: 200,
-	caption: "8H (gratisography.com)"
-},
-{
-	src: "https://c3.staticflickr.com/9/8583/28354353794_9f2d08d8c0_b.jpg",
-	thumbnail: "https://c3.staticflickr.com/9/8583/28354353794_9f2d08d8c0_n.jpg",
-	thumbnailWidth: 320,
-	thumbnailHeight: 200,
-	caption: "286H (gratisography.com)"
-},
-{
-	src: "https://c7.staticflickr.com/9/8569/28941134686_d57273d933_b.jpg",
-	thumbnail: "https://c7.staticflickr.com/9/8569/28941134686_d57273d933_n.jpg",
-	thumbnailWidth: 320,
-	thumbnailHeight: 200,
-	caption: "315H (gratisography.com)"
-},
-{
-	src: "https://c6.staticflickr.com/9/8342/28897193381_800db6419e_b.jpg",
-	thumbnail: "https://c6.staticflickr.com/9/8342/28897193381_800db6419e_n.jpg",
-	thumbnailWidth: 320,
-	thumbnailHeight: 200,
-	isSelected: true,
-	caption: "201H (gratisography.com)"
-},
-{
-	src: "https://c2.staticflickr.com/9/8239/28897202241_1497bec71a_b.jpg",
-	thumbnail: "https://c2.staticflickr.com/9/8239/28897202241_1497bec71a_n.jpg",
-	thumbnailWidth: 320,
-	thumbnailHeight: 200,
-	caption: "Big Ben (Tom Eversley - isorepublic.com)"
-},
-{
-	src: "https://c1.staticflickr.com/9/8785/28687743710_870813dfde_h.jpg",
-	thumbnail: "https://c1.staticflickr.com/9/8785/28687743710_3580fcb5f0_n.jpg",
-	thumbnailWidth: 320,
-	thumbnailHeight: 200,
-	isSelected: true,
-	caption: "Red Zone - Paris (Tom Eversley - isorepublic.com)"
-},
-{
-	src: "https://c6.staticflickr.com/9/8520/28357073053_cafcb3da6f_b.jpg",
-	thumbnail: "https://c6.staticflickr.com/9/8520/28357073053_cafcb3da6f_n.jpg",
-	thumbnailWidth: 320,
-	thumbnailHeight: 200,
-	caption: "Wood Glass (Tom Eversley - isorepublic.com)"
-},
-{
-	src: "https://c8.staticflickr.com/9/8104/28973555735_ae7c208970_b.jpg",
-	thumbnail: "https://c8.staticflickr.com/9/8104/28973555735_ae7c208970_n.jpg",
-	thumbnailWidth: 320,
-	thumbnailHeight: 200,
-	isSelected: true,
-	caption: "Flower Interior Macro (Tom Eversley - isorepublic.com)"
-}]
-
 class Profile extends Component {
 
 	onSelectImage(index,image,allImages){
@@ -147,7 +64,6 @@ class Profile extends Component {
 	}
 
 	uploadPhotos(imagesToBeUploaded){
-		console.log("total images to be uploaded: ",imagesToBeUploaded);
 		// imagesToBeUploaded.map((obj)=>{
 			// console.log("single single image to be upladed: ",obj);
 			this.props.uploadPhotos(imagesToBeUploaded);
@@ -163,7 +79,6 @@ class Profile extends Component {
 	}
 
 	componentDidMount(){
-		console.log("did mount chala");
 		let x = new RegExp("^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,4}$");
 		if(x.test(this.props.match.params.email)){
 		if(localStorage.getItem('google-auth-token')){
@@ -171,10 +86,12 @@ class Profile extends Component {
 			if(user_data.email === this.props.match.params.email){
 			 this.closeToast("Welcome " + user_data.email,2500);
 			}
+			this.props.getImagesOnEmail(this.props.match.params.email);
 		}
 		else{
 			this.closeToast("Login To Upload Photos!! Viewing is allowed without login ", 4000);
 		}
+		this.props.getImagesOnEmail(this.props.match.params.email);
 	}
 	else{
 			this.props.openEmailModal(true);
@@ -245,12 +162,17 @@ class Profile extends Component {
 	}
 
   render() {
+
+		if(this.props.uploadApiResponse){
+			this.closeToast("Photos Uploaded! Check Photos for Updates!", 2500);
+		}
 		let x = new RegExp("^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,4}$");
 		if(x.test(this.props.match.params.email)){
 	}
 	else{
 			this.props.openEmailModal(true);
 	}
+
 		console.log("profile props: ",this.props);
 	 return (
 		<div>
@@ -397,8 +319,8 @@ class Profile extends Component {
 							<div className="images-list-box-container">
 							<Row>
 								<Col md={12}>
-								{
-									IMAGES.map((listViewObj)=>{
+								{this.props.getImagesPayload && this.props.getImagesPayload.length > 0 &&
+									this.props.getImagesPayload.map((listViewObj)=>{
 										return (<div style={{width:'100%',height:'140px',boxShadow: '2px 2px 2px 2px #E0E0E0', border:'1px solid #E0E0E0'}}>
 											<img style={{width:'50%',height:'160px'}} src={listViewObj.thumbnail} alt="list-view-photos"/>
 											{/* printting of tags here */}
@@ -417,10 +339,12 @@ class Profile extends Component {
 							</Row>
 							</div> :
 								<div style={{textAlign:'center'}} className="images-grid-box-container">
+								{this.props.getImagesPayload && this.props.getImagesPayload.length > 0 &&
 									<Gallery 
-										images={IMAGES}
-										onSelectImage={(index,image)=>{this.onSelectImage(index,image,IMAGES)}}
+										images={this.props.getImagesPayload}
+										onSelectImage={(index,image)=>{this.onSelectImage(index,image,this.props.getImagesPayload)}}
 									/>
+								}
 								</div>
 							}
 							</Col>
@@ -448,7 +372,7 @@ class Profile extends Component {
 					 <span style={{color:'white'}}>
 						{`
 						${this.props.loaderString} `}
-						{this.props.currentCount>0 && this.props.totalCount>0 && 
+						{this.props.loaderString==="Optimizing" && 
 						this.props.currentCount}/{this.props.totalCount}
 					 </span>
 				  </div>
@@ -520,7 +444,8 @@ const mapStateToProps = state => ({
 	openModal: state.postReducer.openModal,
 	emailToBeSearchedByModal: state.postReducer.emailToBeSearchedByModal,
 	toggelView: state.postReducer.toggelView,
-	uploadApiResponse: state.postReducer.uploadApiResponse
+	uploadApiResponse: state.postReducer.uploadApiResponse,
+	getImagesPayload: state.postReducer.getImagesPayload
 })
 
 export default connect(mapStateToProps, {
@@ -540,6 +465,7 @@ export default connect(mapStateToProps, {
 	uploadPhotos,
 	openEmailModal,
 	getEmailToBeSearched,
-	changeView
+	changeView,
+	getImagesOnEmail
 })(Profile);
 

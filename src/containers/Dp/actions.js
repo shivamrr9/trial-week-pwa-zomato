@@ -77,12 +77,14 @@ export function uploadPhotos(readyToUploadImages){
                });
                   var promise = doHttpPost(url, objToSend);
                   promise.then((response) => {
-                    console.log("response of upload",response);
+                    let isSuccess = false;
+                    if(response.data.message === "success"){
+                      isSuccess = true;
+                    }
                     dispatch({
                       type: Constants.UPLOAD_API_RESPONSE,
-                      data: response
+                      data: isSuccess
                     });
-                    //setTimeout(() => window.location.reload(), 1000);
                     dispatch({
                        type: Constants.HIDE_LOADER,
                        visibility: false
@@ -94,7 +96,6 @@ export function uploadPhotos(readyToUploadImages){
                       visibility: false
                    });
                   })
-           
           })
           .catch((e) => {
               // Handle errors here
@@ -235,6 +236,55 @@ export function responseGoogle(response){
             type : Constants.GOOGLE_LOGIN_DETAILS,
             response: response
     });
+  }
+}
+
+export function getImagesOnEmail(emailToGetImages){
+  return (dispatch)=>{
+    var objToSend ={
+      "email": emailToGetImages
+    }
+    let url = "http://localhost:8001/imageRouter/getImage";
+     dispatch({
+      type: Constants.SHOW_LOADER,
+      visibility: true,
+      loaderString: "Loading Images"
+  });
+     var promise = doHttpPost(url, objToSend);
+     promise.then((response) => {
+       console.log("get Images result:",response);
+       let displayArray = response.data;
+       let tagsArray = [];
+       displayArray.map((obj)=>{
+          obj.src = obj.imageUrl;
+          obj.thumbnail = obj.imageUrl;
+          obj.thumbnailWidth= 300;
+          obj.thumbnailHeight= 200;
+          obj.caption = "Images of "+obj.email;
+          obj.isSelected = false;
+          obj.tag.map((tagObj)=>{
+            if(obj && obj.tag && obj.tag.length){
+            tagsArray.push({"value": tagObj , "title": tagObj});
+          }
+          });
+          obj.tags = tagsArray;
+       })
+       dispatch({
+         type: Constants.LOADING_IMAGES_RESPONSE,
+         data: displayArray
+       });
+       //setTimeout(() => window.location.reload(), 1000);
+       dispatch({
+          type: Constants.HIDE_LOADER,
+          visibility: false
+      });
+     }, (err) => {
+      console.log("error in post call :",err);
+      dispatch({
+          type: Constants.HIDE_LOADER,
+          visibility: false
+      });
+     })
   }
 }
 

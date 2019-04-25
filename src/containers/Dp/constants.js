@@ -20,5 +20,6 @@ export const Constants = keyMirror({
     OPEN_MODAL: null,
     EMAIL_TO_BE_SEARCHED_BY_MODAL: null,
     VIEW_TOGGLE: null,
-    UPLOAD_API_RESPONSE: null
+    UPLOAD_API_RESPONSE: null,
+    LOADING_IMAGES_RESPONSE: null
 });
