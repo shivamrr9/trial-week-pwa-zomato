@@ -1,9 +1,9 @@
 {
-  "short_name": "Shivam's BoilerPlate",
-  "name": "Shivam's BoilerPlate",
+  "short_name": "Zomato Trial Week",
+  "name": "Zomato Trial Week",
   "icons": [
     {
-      "src": "favicon.ico",
+      "src": "https://res.cloudinary.com/arorashivam-com-resume/image/upload/v1555929183/zomato-logo_v0erpj.png",
       "sizes": "64x64 32x32 24x24 16x16",
       "type": "image/x-icon"
     }
@@ -11,5 +11,5 @@
   "start_url": ".",
   "display": "standalone",
   "theme_color": "#000000",
-  "background_color": "#ffffff"
+  "background_image": "https://res.cloudinary.com/arorashivam-com-resume/image/upload/v1556179329/16884-restaurant-939435960720_oe20uk.jpg"
 }

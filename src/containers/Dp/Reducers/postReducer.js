@@ -17,7 +17,8 @@ const initialState = {
     isTagAdded:false,
     selectedTabValue:0,
     openModal:null,
-    emailToBeSearchedByModal:null
+    emailToBeSearchedByModal:null,
+    toggelView: false
 };
 
 export default function (state = initialState, action) {
@@ -88,9 +89,12 @@ export default function (state = initialState, action) {
                     openModal: action.openModal
                 }
         case Constants.EMAIL_TO_BE_SEARCHED_BY_MODAL:
-        console.log("Reducer tka value aarahi hai!! :", action.emailToBeSearchedByModal);
                 return{...state,
                     emailToBeSearchedByModal: action.emailToBeSearched
+                }
+        case Constants.VIEW_TOGGLE:
+                return{...state,
+                    toggelView: action.viewOption
                 }
                 
         default:

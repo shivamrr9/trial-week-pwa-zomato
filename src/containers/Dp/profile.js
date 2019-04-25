@@ -16,7 +16,8 @@ import {
 	selectedTab,
 	uploadPhotos,
 	openEmailModal,
-	getEmailToBeSearched
+	getEmailToBeSearched,
+	changeView
 } from './actions.js';
 import styles from './styles.scss';
 import CircularProgress from '@material-ui/core/CircularProgress';
@@ -134,6 +135,10 @@ class Profile extends Component {
 		console.log("index of selected image: ",index);
 		console.log("selected image: ",image);
 		console.log(allImages[index]);
+	}
+
+	changeView(viewOption){
+			this.props.changeView(viewOption);
 	}
 
 	searchByModalEmail(emailToBeSearchedByModal){
@@ -384,23 +389,47 @@ class Profile extends Component {
 					<Row>
 							<Col md={2}></Col>
 							<Col md={8}>
+							{this.props.toggelView ? 
+							<div className="images-list-box-container">
+							<Row>
+								<Col md={12}>
+								{
+									IMAGES.map((listViewObj)=>{
+										return (<div style={{width:'100%',height:'140px',boxShadow: '2px 2px 2px 2px #E0E0E0', border:'1px solid #E0E0E0'}}>
+											<img style={{width:'50%',height:'160px'}} src={listViewObj.thumbnail} alt="list-view-photos"/>
+											{/* printting of tags here */}
+											<span>
+											<Checkbox
+												style={{float:'right'}}
+												checked={true}
+												onChange={(val)=>{console.log(val.target.checked)}}
+												color="primary"
+											/>
+											</span>
+										</div>)
+									})
+								}
+								</Col>
+							</Row>
+							</div> :
 								<div style={{textAlign:'center'}} className="images-grid-box-container">
 									<Gallery 
 										images={IMAGES}
 										onSelectImage={(index,image)=>{this.onSelectImage(index,image,IMAGES)}}
 									/>
 								</div>
+							}
 							</Col>
 							<Col md={2}>
 							<div className="toggle-view">
-							<span>Grid</span>
+							<span><br />Grid</span>
 							<Switch
 								// checked={true}
-								onChange={(val)=>{console.log(val.target.checked)}}
+								onChange={(val)=>{this.changeView(val.target.checked)}}
 								color="primary"
 							/>
-							</div>
 							<span>List</span>
+							</div>
 							</Col>
 					</Row>
 			</Container>
@@ -485,7 +514,8 @@ const mapStateToProps = state => ({
 	isTagAdded: state.postReducer.isTagAdded,
 	selectedTabValue: state.postReducer.selectedTabValue,
 	openModal: state.postReducer.openModal,
-	emailToBeSearchedByModal: state.postReducer.emailToBeSearchedByModal
+	emailToBeSearchedByModal: state.postReducer.emailToBeSearchedByModal,
+	toggelView: state.postReducer.toggelView
 })
 
 export default connect(mapStateToProps, {
@@ -504,6 +534,7 @@ export default connect(mapStateToProps, {
 	selectedTab,
 	uploadPhotos,
 	openEmailModal,
-	getEmailToBeSearched
+	getEmailToBeSearched,
+	changeView
 })(Profile);
 

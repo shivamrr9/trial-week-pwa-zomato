@@ -10,6 +10,15 @@ export function Test(flag){
     }
 }
 
+export function changeView(viewOption){
+    return(dispatch) =>{
+        dispatch({
+            type: Constants.VIEW_TOGGLE,
+            viewOption
+        });
+    }
+}
+
 export function openEmailModal(openModal){
   return (dispatch) =>{
         dispatch({

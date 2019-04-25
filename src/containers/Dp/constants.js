@@ -18,5 +18,6 @@ export const Constants = keyMirror({
     IMAGES_AFTER_ADDING_TAGS: null,
     SELECTED_TAB: null,
     OPEN_MODAL: null,
-    EMAIL_TO_BE_SEARCHED_BY_MODAL: null
+    EMAIL_TO_BE_SEARCHED_BY_MODAL: null,
+    VIEW_TOGGLE: null
 });
