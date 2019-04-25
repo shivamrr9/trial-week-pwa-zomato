@@ -147,7 +147,11 @@ class Profile extends Component {
 	}
 
 	uploadPhotos(imagesToBeUploaded){
-		this.props.uploadPhotos(imagesToBeUploaded);
+		console.log("total images to be uploaded: ",imagesToBeUploaded);
+		imagesToBeUploaded.map((obj)=>{
+			console.log("single single image to be upladed: ",obj);
+			this.props.uploadPhotos(obj);
+		});
 	}
 
 	closeToast(string,holdTime){
