@@ -15,7 +15,9 @@ const initialState = {
     totalCount: 0,
     tagsData:null,
     isTagAdded:false,
-    selectedTabValue:0
+    selectedTabValue:0,
+    openModal:null,
+    emailToBeSearchedByModal:null
 };
 
 export default function (state = initialState, action) {
@@ -80,6 +82,15 @@ export default function (state = initialState, action) {
         case Constants.SELECTED_TAB:
                 return{...state,
                     selectedTabValue:action.selectedTab
+                }
+        case Constants.OPEN_MODAL:
+                return{...state,
+                    openModal: action.openModal
+                }
+        case Constants.EMAIL_TO_BE_SEARCHED_BY_MODAL:
+        console.log("Reducer tka value aarahi hai!! :", action.emailToBeSearchedByModal);
+                return{...state,
+                    emailToBeSearchedByModal: action.emailToBeSearched
                 }
                 
         default:

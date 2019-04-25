@@ -14,7 +14,9 @@ import {
 	recordTags,
 	addTagsToPhotos,
 	selectedTab,
-	uploadPhotos
+	uploadPhotos,
+	openEmailModal,
+	getEmailToBeSearched
 } from './actions.js';
 import styles from './styles.scss';
 import CircularProgress from '@material-ui/core/CircularProgress';
@@ -43,6 +45,11 @@ import Modal from 'react-bootstrap/Modal';
 
 class Profile extends Component {
 
+	searchByModalEmail(emailToBeSearchedByModal){
+		this.props.openEmailModal(false);
+		this.props.history.push('/profile/'+emailToBeSearchedByModal);
+	}
+
 	uploadPhotos(imagesToBeUploaded){
 		this.props.uploadPhotos(imagesToBeUploaded);
 	}
@@ -50,8 +57,13 @@ class Profile extends Component {
 	closeToast(string,holdTime){
     toast(string, { autoClose: holdTime });
 	} 
-	
+
+	goToLogin(){
+		this.props.history.push('/');
+	}
+
 	componentDidMount(){
+		console.log("did mount chala");
 		let x = new RegExp("^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,4}$");
 		if(x.test(this.props.match.params.email)){
 		if(localStorage.getItem('google-auth-token')){
@@ -65,7 +77,7 @@ class Profile extends Component {
 		}
 	}
 	else{
-		
+			this.props.openEmailModal(true);
 	}
 }
 
@@ -133,6 +145,12 @@ class Profile extends Component {
 	}
 
   render() {
+		let x = new RegExp("^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,4}$");
+		if(x.test(this.props.match.params.email)){
+	}
+	else{
+			this.props.openEmailModal(true);
+	}
 		console.log("profile props: ",this.props);
 	 return (
 		<div>
@@ -319,20 +337,16 @@ class Profile extends Component {
 				<ToastContainer 
       autoClose={2500} 
      />
-		 <Modal show={false} onHide={this.handleClose}>
-          <Modal.Header closeButton>
-            <Modal.Title>Modal heading</Modal.Title>
+		 <Modal show={this.props.openModal} onHide={this.handleClose}>
+          <Modal.Header>
+            <Modal.Title>You Entered a wrong Email!!</Modal.Title>
           </Modal.Header>
-          <Modal.Body>Woohoo, you're reading this text in a modal!</Modal.Body>
+          <Modal.Body>Enter correct Email ID : <input type="email" placeholder="Email to be searched" onChange={(val)=>{this.props.getEmailToBeSearched(val.target.value)}} /></Modal.Body>
+					<button onClick={()=>{this.searchByModalEmail(this.props.emailToBeSearchedByModal)}}>Submit</button>
           <Modal.Footer>
-            <Button variant="secondary" onClick={this.handleClose}>
-              Close
-            </Button>
-            <Button variant="primary" onClick={this.handleClose}>
-              Save Changes
-            </Button>
+           <span style={{textAlign:'left'}}>Not a member yet? <span style={{color:'blue',cursor:'pointer'}} onClick={()=>{this.goToLogin()}}>Click here</span> to Join Minimal Instagram!!</span>
           </Modal.Footer>
-        </Modal>
+      </Modal>
 		</div>
 	 );
   }
@@ -354,6 +368,8 @@ const mapStateToProps = state => ({
 	tagsData: state.postReducer.tagsData,
 	isTagAdded: state.postReducer.isTagAdded,
 	selectedTabValue: state.postReducer.selectedTabValue,
+	openModal: state.postReducer.openModal,
+	emailToBeSearchedByModal: state.postReducer.emailToBeSearchedByModal
 })
 
 export default connect(mapStateToProps, {
@@ -370,6 +386,8 @@ export default connect(mapStateToProps, {
 	recordTags,
 	addTagsToPhotos,
 	selectedTab,
-	uploadPhotos
+	uploadPhotos,
+	openEmailModal,
+	getEmailToBeSearched
 })(Profile);
 

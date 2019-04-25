@@ -10,6 +10,24 @@ export function Test(flag){
     }
 }
 
+export function openEmailModal(openModal){
+  return (dispatch) =>{
+        dispatch({
+            type:Constants.OPEN_MODAL,
+            openModal
+        });
+  }
+}
+
+export function getEmailToBeSearched(emailToBeSearched){
+  return (dispatch) =>{
+        dispatch({
+          type: Constants.EMAIL_TO_BE_SEARCHED_BY_MODAL,
+          emailToBeSearched
+        })
+  }
+}
+
 export function uploadPhotos(readyToUploadImages){
   console.log("ready to upload Images:",readyToUploadImages);
     // return (dispatch) => {
