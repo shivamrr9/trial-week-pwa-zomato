@@ -515,7 +515,8 @@ const mapStateToProps = state => ({
 	selectedTabValue: state.postReducer.selectedTabValue,
 	openModal: state.postReducer.openModal,
 	emailToBeSearchedByModal: state.postReducer.emailToBeSearchedByModal,
-	toggelView: state.postReducer.toggelView
+	toggelView: state.postReducer.toggelView,
+	uploadApiResponse: state.postReducer.uploadApiResponse
 })
 
 export default connect(mapStateToProps, {

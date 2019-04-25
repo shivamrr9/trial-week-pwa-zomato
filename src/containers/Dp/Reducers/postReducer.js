@@ -18,7 +18,8 @@ const initialState = {
     selectedTabValue:0,
     openModal:null,
     emailToBeSearchedByModal:null,
-    toggelView: false
+    toggelView: false,
+    uploadApiResponse:null
 };
 
 export default function (state = initialState, action) {
@@ -95,6 +96,10 @@ export default function (state = initialState, action) {
         case Constants.VIEW_TOGGLE:
                 return{...state,
                     toggelView: action.viewOption
+                }
+        case Constants.UPLOAD_API_RESPONSE:
+                return{...state,
+                    uploadApiResponse: action.data
                 }
                 
         default:

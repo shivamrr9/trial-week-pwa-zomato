@@ -37,60 +37,58 @@ export function getEmailToBeSearched(emailToBeSearched){
   }
 }
 
-export function uploadPhotos(readyToUploadImages){
-  console.log("ready to upload Images:",readyToUploadImages);
-    // return (dispatch) => {
-    //   var objToSend ={
-    //     "name":"test5",
-    //     "salary":"123",
-    //     "age":"23"
-    //    }
-    //    var url = ``;
-    //    dispatch({
-    //     type: Constants.SHOW_LOADER,
-    //     visibility: true
-    // });
-    //    var promise = doHttpPost(url, objToSend);
-    //    promise.then((response) => {
-    //      dispatch({
-           
-    //      });
-    //      dispatch({
-    //         type: Constants.HIDE_LOADER,
-    //         visibility: false
-    //     });
-    //    }, (err) => {
-    //     console.log("error in post call :",err);
-    //     dispatch({
-    //         type: Constants.HIDE_LOADER,
-    //         visibility: false
-    //     });
-    //    })
-    // }
+function getBase64(file) {
+  return new Promise((resolve, reject) => {
+    const reader = new FileReader();
+    reader.readAsDataURL(file);
+    reader.onload = () => resolve(reader.result);
+    reader.onerror = error => reject(error);
+  });
 }
 
-// export function* uploadReceiptData({ uploadFiles }) {
+export function uploadPhotos(readyToUploadImages){
+  let array = [];
+  readyToUploadImages.map((obj)=>{
+    getBase64(obj);
+  });
 
-//   const fileDto = new FormData();
-
-//   uploadFiles.forEach((file) => {
-//       fileDto.append('files', file, file.name);
-//   });
-
-
-//   yield* doHttp({
-//       method: 'POST',
-//       data: fileDto,
-//       headers: { 'Content-Type': 'multipart/form-data' },
-//       url: `${hostUrls.vendorPortal}api/v1/images/upload`,
-//       successPut: (data) => {
-//           return Actions.receivedUploadedData(data);
-//       },
-//       errorPut: (err) => {
-//           return Actions.recievedUploadError(err);
-//       }
-//   })
-// }
+  let tags = readyToUploadImages[0].tags || [];
+  let authEmail = JSON.parse(localStorage.getItem('user_details')).email;
+  debugger;
+  return (dispatch) => {
+    var objToSend ={
+        "image":[],
+        "email":authEmail,
+        "tag": tags
+       }
+       debugger;
+       var url = `http://localhost:8001/imageRouter/uploadImage`;
+       dispatch({
+        type: Constants.SHOW_LOADER,
+        visibility: true,
+        loaderString: "Uploading"+readyToUploadImages.length+"Images"
+    });
+       var promise = doHttpPost(url, objToSend);
+       promise.then((response) => {
+         console.log("response of upload",response);
+         dispatch({
+           type: Constants.UPLOAD_API_RESPONSE,
+           data: response
+         });
+         //setTimeout(() => window.location.reload(), 1000);
+         dispatch({
+            type: Constants.HIDE_LOADER,
+            visibility: false
+        });
+       }, (err) => {
+        console.log("error in post call :",err);
+        dispatch({
+            type: Constants.HIDE_LOADER,
+            visibility: false
+        });
+       })
+  }
+}
 
 export function selectedTab(selectedTab){
     return (dispatch) =>{

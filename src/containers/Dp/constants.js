@@ -19,5 +19,6 @@ export const Constants = keyMirror({
     SELECTED_TAB: null,
     OPEN_MODAL: null,
     EMAIL_TO_BE_SEARCHED_BY_MODAL: null,
-    VIEW_TOGGLE: null
+    VIEW_TOGGLE: null,
+    UPLOAD_API_RESPONSE: null
 });
