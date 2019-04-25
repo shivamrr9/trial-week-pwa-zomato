@@ -45,6 +45,9 @@ import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.min.css'; 
 import Modal from 'react-bootstrap/Modal';
 import Switch from '@material-ui/core/Switch';
+import * as introJs from 'intro.js';
+
+const introJsObj = introJs.introJs();
 
 class Profile extends Component {
 
@@ -274,6 +277,7 @@ class Profile extends Component {
 			</div>
 			</div> :
 			<div className="upload-container">
+			<div data-intro="Upload Photu">
 			<Dropzone
             className="dropZone"
             accept={"image/png,image/jpeg,image/jpg,image/svg"}
@@ -289,6 +293,7 @@ class Profile extends Component {
 							Upload Photos
 						</Button>
       </Dropzone>
+			</div>
 			<span>No Uploads So Far.. Upload Photos?</span>
 			</div>
 			}
