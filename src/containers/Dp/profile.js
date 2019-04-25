@@ -13,7 +13,8 @@ import {
 	fileCount,
 	recordTags,
 	addTagsToPhotos,
-	selectedTab
+	selectedTab,
+	uploadPhotos
 } from './actions.js';
 import styles from './styles.scss';
 import CircularProgress from '@material-ui/core/CircularProgress';
@@ -36,8 +37,37 @@ import {compressImage} from '../../components/imageUtilities';
 import Tabs from '@material-ui/core/Tabs';
 import Tab from '@material-ui/core/Tab';
 import Paper from '@material-ui/core/Paper';
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.min.css'; 
+import Modal from 'react-bootstrap/Modal';
 
 class Profile extends Component {
+
+	uploadPhotos(imagesToBeUploaded){
+		this.props.uploadPhotos(imagesToBeUploaded);
+	}
+
+	closeToast(string,holdTime){
+    toast(string, { autoClose: holdTime });
+	} 
+	
+	componentDidMount(){
+		let x = new RegExp("^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,4}$");
+		if(x.test(this.props.match.params.email)){
+		if(localStorage.getItem('google-auth-token')){
+			let user_data = JSON.parse(localStorage.getItem('user_details'));
+			if(user_data.email === this.props.match.params.email){
+			 this.closeToast("Welcome " + user_data.email,2500);
+			}
+		}
+		else{
+			this.closeToast("Login To Upload Photos!! Viewing is allowed without login ", 4000);
+		}
+	}
+	else{
+		
+	}
+}
 
 	handleClose(){
 		//write code to close toast logic sochna hai..
@@ -106,7 +136,9 @@ class Profile extends Component {
 		console.log("profile props: ",this.props);
 	 return (
 		<div>
-			<Header />
+			<Header 
+					props={this.props} 
+			/>
 			<Paper square>
 			<Tabs
 					style={{color:'red'}}
@@ -114,15 +146,18 @@ class Profile extends Component {
           textColor="primary"
 					onChange={(event,value)=>{this.props.selectedTab(value)}}
 					value={this.props.selectedTabValue}
-					centered
+					centered={true}
         >
 					<Tab 
 						label="Photos" 
 					/>
+					{localStorage.getItem('google-auth-token') && 
+					(JSON.parse(localStorage.getItem('user_details')).email === this.props.match.params.email) &&
 					<Tab 
 						label="Upload Photos" 
 						disabled={false}
 						/>
+					}
       </Tabs>
 			</Paper>
 			{this.props.selectedTabValue ?
@@ -225,8 +260,9 @@ class Profile extends Component {
 					variant="contained"
 					color="primary"
 					className="final-upload-button"
+					onClick={()=>{this.uploadPhotos(this.props.imagesOnLocal)}}
 				>
-					Upload Photos
+					Start Upload
 				</Button>
 				</div>
 			}
@@ -280,6 +316,23 @@ class Profile extends Component {
             </IconButton>,
           ]}
         />
+				<ToastContainer 
+      autoClose={2500} 
+     />
+		 <Modal show={false} onHide={this.handleClose}>
+          <Modal.Header closeButton>
+            <Modal.Title>Modal heading</Modal.Title>
+          </Modal.Header>
+          <Modal.Body>Woohoo, you're reading this text in a modal!</Modal.Body>
+          <Modal.Footer>
+            <Button variant="secondary" onClick={this.handleClose}>
+              Close
+            </Button>
+            <Button variant="primary" onClick={this.handleClose}>
+              Save Changes
+            </Button>
+          </Modal.Footer>
+        </Modal>
 		</div>
 	 );
   }
@@ -300,7 +353,7 @@ const mapStateToProps = state => ({
 	totalCount: state.postReducer.totalCount,
 	tagsData: state.postReducer.tagsData,
 	isTagAdded: state.postReducer.isTagAdded,
-	selectedTabValue: state.postReducer.selectedTabValue
+	selectedTabValue: state.postReducer.selectedTabValue,
 })
 
 export default connect(mapStateToProps, {
@@ -316,6 +369,7 @@ export default connect(mapStateToProps, {
 	fileCount,
 	recordTags,
 	addTagsToPhotos,
-	selectedTab
+	selectedTab,
+	uploadPhotos
 })(Profile);
 

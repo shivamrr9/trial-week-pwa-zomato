@@ -78,7 +78,6 @@ export default function (state = initialState, action) {
                     isTagAdded: true
                 }
         case Constants.SELECTED_TAB:
-        console.log("tab selected: ",action.selectedTab);
                 return{...state,
                     selectedTabValue:action.selectedTab
                 }

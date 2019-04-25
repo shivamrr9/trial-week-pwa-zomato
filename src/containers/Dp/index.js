@@ -8,7 +8,8 @@ import FacebookLogin from 'react-facebook-login';
 import Row from 'react-bootstrap/Row';
 import Container from 'react-bootstrap/Container';
 import Col from 'react-bootstrap/Col';
-// import { Redirect } from 'react-router-dom';
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.min.css'; 
 
 
 class Dp extends Component {
@@ -19,9 +20,21 @@ class Dp extends Component {
   responseFacebook(response){
     console.log("Facebook se response aya: ",response);
   }
+
+  componentDidMount(){
+    if(localStorage.getItem('google-auth-token')){
+      let user_data = JSON.parse(localStorage.getItem('user_details'));
+      // this.closeToast(user_data.email);
+      this.props.history.push('/profile/'+user_data.email)
+    }
+  }
   
   render() {
    console.log("props :", this.props);
+   if(localStorage.getItem('google-auth-token')){
+    let user_data = JSON.parse(localStorage.getItem('user_details'));
+    this.props.history.push('/profile/'+user_data.email)
+  }
 	 return (
 		<div>
   <Container>
@@ -62,10 +75,6 @@ class Dp extends Component {
       <Col md={3}></Col>
     </Row>
   </Container>
-		 {/* <button className="hyy" onClick={() => { this.props.Test(this.props.test + 5) }}>hyy</button>
-		  <button onClick={() => { this.props.ApiCall() }}>ApiCall</button>
-		  <button onClick={() => { this.props.postApiCall() }}>Post api call</button> */}
-  
 		  {this.props.visibility &&
 			 <div className="full-loader">
 				<div className="relative">
@@ -74,8 +83,11 @@ class Dp extends Component {
 				  </div>
 				</div>
 			 </div>
-		  }
-		</div>
+      }
+     <ToastContainer 
+      autoClose={2500} 
+     />
+    </div>
 	 );
   }
 }

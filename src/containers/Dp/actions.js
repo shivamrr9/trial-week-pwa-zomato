@@ -10,6 +10,61 @@ export function Test(flag){
     }
 }
 
+export function uploadPhotos(readyToUploadImages){
+  console.log("ready to upload Images:",readyToUploadImages);
+    // return (dispatch) => {
+    //   var objToSend ={
+    //     "name":"test5",
+    //     "salary":"123",
+    //     "age":"23"
+    //    }
+    //    var url = ``;
+    //    dispatch({
+    //     type: Constants.SHOW_LOADER,
+    //     visibility: true
+    // });
+    //    var promise = doHttpPost(url, objToSend);
+    //    promise.then((response) => {
+    //      dispatch({
+           
+    //      });
+    //      dispatch({
+    //         type: Constants.HIDE_LOADER,
+    //         visibility: false
+    //     });
+    //    }, (err) => {
+    //     console.log("error in post call :",err);
+    //     dispatch({
+    //         type: Constants.HIDE_LOADER,
+    //         visibility: false
+    //     });
+    //    })
+    // }
+}
+
+// export function* uploadReceiptData({ uploadFiles }) {
+
+//   const fileDto = new FormData();
+
+//   uploadFiles.forEach((file) => {
+//       fileDto.append('files', file, file.name);
+//   });
+
+
+//   yield* doHttp({
+//       method: 'POST',
+//       data: fileDto,
+//       headers: { 'Content-Type': 'multipart/form-data' },
+//       url: `${hostUrls.vendorPortal}api/v1/images/upload`,
+//       successPut: (data) => {
+//           return Actions.receivedUploadedData(data);
+//       },
+//       errorPut: (err) => {
+//           return Actions.recievedUploadError(err);
+//       }
+//   })
+// }
+
 export function selectedTab(selectedTab){
     return (dispatch) =>{
       dispatch({

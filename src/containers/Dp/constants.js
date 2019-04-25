@@ -16,5 +16,5 @@ export const Constants = keyMirror({
     OPTIMIZING_COUNTER: null,
     TAGS_INPUT_DATA: null,
     IMAGES_AFTER_ADDING_TAGS: null,
-    SELECTED_TAB: null
+    SELECTED_TAB: null,
 });

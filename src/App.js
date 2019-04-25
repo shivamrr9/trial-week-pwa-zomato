@@ -5,14 +5,6 @@ import Dp from './containers/Dp';
 import Profile from './containers/Dp/profile';
 
 class App extends Component {
-  //  requireAuth(){
-  //    console.log("aya iske andar");
-  //    let auth_token = localStorage.getItem('google-auth-token');
-  //    if(!auth_token){
-  //      alert("login required to access this reqource");
-  //      <Redirect to={{ pathname: '/'}} />
-  //    }
-  //  }
 
   render() {
     return (
@@ -20,7 +12,7 @@ class App extends Component {
         <div>
           <Switch>
             <Route exact path='/' component={Dp}/>
-            <Route exact path='/profile' component={Profile} />
+            <Route exact path='/profile/:email' component={Profile} />
           </Switch>
         </div>
       </BrowserRouter>
