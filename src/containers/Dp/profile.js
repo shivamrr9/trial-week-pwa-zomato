@@ -42,8 +42,99 @@ import Paper from '@material-ui/core/Paper';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.min.css'; 
 import Modal from 'react-bootstrap/Modal';
+import Switch from '@material-ui/core/Switch';
+
+const IMAGES =
+[{
+        src: "https://c2.staticflickr.com/9/8817/28973449265_07e3aa5d2e_b.jpg",
+        thumbnail: "https://c2.staticflickr.com/9/8817/28973449265_07e3aa5d2e_n.jpg",
+        thumbnailWidth: 320,
+        thumbnailHeight: 200,
+        isSelected: true,
+        caption: "After Rain (Jeshu John - designerspics.com)"
+},
+{
+        src: "https://c2.staticflickr.com/9/8356/28897120681_3b2c0f43e0_b.jpg",
+        thumbnail: "https://c2.staticflickr.com/9/8356/28897120681_3b2c0f43e0_n.jpg",
+        thumbnailWidth: 320,
+        thumbnailHeight: 200,
+        tags: [{value: "Ocean", title: "Ocean"}, {value: "People", title: "People"}],
+        caption: "Boats (Jeshu John - designerspics.com)"
+},
+ 
+{
+        src: "https://c4.staticflickr.com/9/8887/28897124891_98c4fdd82b_b.jpg",
+        thumbnail: "https://c4.staticflickr.com/9/8887/28897124891_98c4fdd82b_n.jpg",
+        thumbnailWidth: 320,
+        thumbnailHeight: 200
+},
+{
+	src: "https://c5.staticflickr.com/9/8768/28941110956_b05ab588c1_b.jpg",
+	thumbnail: "https://c5.staticflickr.com/9/8768/28941110956_b05ab588c1_n.jpg",
+	thumbnailWidth: 320,
+	thumbnailHeight: 200,
+	caption: "8H (gratisography.com)"
+},
+{
+	src: "https://c3.staticflickr.com/9/8583/28354353794_9f2d08d8c0_b.jpg",
+	thumbnail: "https://c3.staticflickr.com/9/8583/28354353794_9f2d08d8c0_n.jpg",
+	thumbnailWidth: 320,
+	thumbnailHeight: 200,
+	caption: "286H (gratisography.com)"
+},
+{
+	src: "https://c7.staticflickr.com/9/8569/28941134686_d57273d933_b.jpg",
+	thumbnail: "https://c7.staticflickr.com/9/8569/28941134686_d57273d933_n.jpg",
+	thumbnailWidth: 320,
+	thumbnailHeight: 200,
+	caption: "315H (gratisography.com)"
+},
+{
+	src: "https://c6.staticflickr.com/9/8342/28897193381_800db6419e_b.jpg",
+	thumbnail: "https://c6.staticflickr.com/9/8342/28897193381_800db6419e_n.jpg",
+	thumbnailWidth: 320,
+	thumbnailHeight: 200,
+	isSelected: true,
+	caption: "201H (gratisography.com)"
+},
+{
+	src: "https://c2.staticflickr.com/9/8239/28897202241_1497bec71a_b.jpg",
+	thumbnail: "https://c2.staticflickr.com/9/8239/28897202241_1497bec71a_n.jpg",
+	thumbnailWidth: 320,
+	thumbnailHeight: 200,
+	caption: "Big Ben (Tom Eversley - isorepublic.com)"
+},
+{
+	src: "https://c1.staticflickr.com/9/8785/28687743710_870813dfde_h.jpg",
+	thumbnail: "https://c1.staticflickr.com/9/8785/28687743710_3580fcb5f0_n.jpg",
+	thumbnailWidth: 320,
+	thumbnailHeight: 200,
+	isSelected: true,
+	caption: "Red Zone - Paris (Tom Eversley - isorepublic.com)"
+},
+{
+	src: "https://c6.staticflickr.com/9/8520/28357073053_cafcb3da6f_b.jpg",
+	thumbnail: "https://c6.staticflickr.com/9/8520/28357073053_cafcb3da6f_n.jpg",
+	thumbnailWidth: 320,
+	thumbnailHeight: 200,
+	caption: "Wood Glass (Tom Eversley - isorepublic.com)"
+},
+{
+	src: "https://c8.staticflickr.com/9/8104/28973555735_ae7c208970_b.jpg",
+	thumbnail: "https://c8.staticflickr.com/9/8104/28973555735_ae7c208970_n.jpg",
+	thumbnailWidth: 320,
+	thumbnailHeight: 200,
+	isSelected: true,
+	caption: "Flower Interior Macro (Tom Eversley - isorepublic.com)"
+}]
 
 class Profile extends Component {
+
+	onSelectImage(index,image,allImages){
+		console.log("index of selected image: ",index);
+		console.log("selected image: ",image);
+		console.log(allImages[index]);
+	}
 
 	searchByModalEmail(emailToBeSearchedByModal){
 		this.props.openEmailModal(false);
@@ -289,7 +380,30 @@ class Profile extends Component {
 		</Container>
 		</div> : 
 		<div className="photos-view">
-			Photos View for Grid and List Layout
+			<Container>
+					<Row>
+							<Col md={2}></Col>
+							<Col md={8}>
+								<div style={{textAlign:'center'}} className="images-grid-box-container">
+									<Gallery 
+										images={IMAGES}
+										onSelectImage={(index,image)=>{this.onSelectImage(index,image,IMAGES)}}
+									/>
+								</div>
+							</Col>
+							<Col md={2}>
+							<div className="toggle-view">
+							<span>Grid</span>
+							<Switch
+								// checked={true}
+								onChange={(val)=>{console.log(val.target.checked)}}
+								color="primary"
+							/>
+							</div>
+							<span>List</span>
+							</Col>
+					</Row>
+			</Container>
 		</div>
 		}
   	  {this.props.visibility &&
@@ -343,9 +457,11 @@ class Profile extends Component {
           </Modal.Header>
           <Modal.Body>Enter correct Email ID : <input type="email" placeholder="Email to be searched" onChange={(val)=>{this.props.getEmailToBeSearched(val.target.value)}} /></Modal.Body>
 					<button onClick={()=>{this.searchByModalEmail(this.props.emailToBeSearchedByModal)}}>Submit</button>
-          <Modal.Footer>
+          {!localStorage.getItem('google-auth-token') &&
+					<Modal.Footer>
            <span style={{textAlign:'left'}}>Not a member yet? <span style={{color:'blue',cursor:'pointer'}} onClick={()=>{this.goToLogin()}}>Click here</span> to Join Minimal Instagram!!</span>
-          </Modal.Footer>
+					 </Modal.Footer>
+					}
       </Modal>
 		</div>
 	 );

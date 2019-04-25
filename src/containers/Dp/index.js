@@ -13,6 +13,18 @@ import 'react-toastify/dist/ReactToastify.min.css';
 
 
 class Dp extends Component {
+
+  createAuthForMobile(){
+    localStorage.setItem('google-auth-token','auth-token-for-mobile');
+    localStorage.setItem('user_details',JSON.stringify({
+      "googleId": "117419421046709479609",
+      "imageUrl": "https://lh6.googleusercontent.com/-d0X07UMU-gs/AAAAAAAAAAI/AAAAAAAAAAA/ACHi3rfUPhnxPyQzTD1dOVbXQblQ11GhLA/s96-c/photo.jpg",
+      "email": "shivam.1996arora@gmail.com",
+      "name": "Shivam Arora",
+      "givenName": "Shivam",
+      "familyName": "Arora"
+    }))
+  }
   responseGoogle(response){
 	 this.props.responseGoogle(response);
   }
@@ -87,6 +99,7 @@ class Dp extends Component {
      <ToastContainer 
       autoClose={2500} 
      />
+     <button onClick={()=>{this.createAuthForMobile()}}>Create Auth for Mobile</button>
     </div>
 	 );
   }
