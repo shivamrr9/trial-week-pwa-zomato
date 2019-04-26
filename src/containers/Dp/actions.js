@@ -68,7 +68,6 @@ export function uploadPhotos(readyToUploadImages){
                    "tag": tags
                   }
                   console.log("obj to send: ",objToSend);
-                  debugger;
                   var url = `http://localhost:8001/imageRouter/uploadImage`;
                   dispatch({
                    type: Constants.SHOW_LOADER,
@@ -262,12 +261,12 @@ export function getImagesOnEmail(emailToGetImages){
           obj.thumbnailHeight= 200;
           obj.caption = "Images of "+obj.email;
           obj.isSelected = false;
-          obj.tag.map((tagObj)=>{
-            if(obj && obj.tag && obj.tag.length){
-            tagsArray.push({"value": tagObj , "title": tagObj});
-          }
-          });
-          obj.tags = tagsArray;
+          // obj.tag.map((tagObj)=>{
+          //   if(obj && obj.tag && obj.tag.length){
+          //   tagsArray.push({"value": tagObj , "title": tagObj});
+          // }
+          // });
+          // obj.tags = tagsArray;
        })
        dispatch({
          type: Constants.LOADING_IMAGES_RESPONSE,

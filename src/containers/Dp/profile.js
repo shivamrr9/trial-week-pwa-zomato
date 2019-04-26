@@ -67,10 +67,33 @@ class Profile extends Component {
 	}
 
 	uploadPhotos(imagesToBeUploaded){
-		// imagesToBeUploaded.map((obj)=>{
-			// console.log("single single image to be upladed: ",obj);
-			this.props.uploadPhotos(imagesToBeUploaded);
-		// });
+			let len = imagesToBeUploaded.length;
+			let count = 0;
+			let upload3Array = [];
+			let uploadLeftOverArray = [];
+			let reminder = len%3;
+			let quotient = Math.floor(len/3);
+			console.log("quotient:",quotient);
+			console.log("reminder:",reminder);
+			
+			imagesToBeUploaded.map((imagObj)=>{
+					count++;
+					upload3Array.push(imagObj);
+					if(count===3){
+						this.props.uploadPhotos(upload3Array);
+						count = 0;
+						upload3Array = [];
+					}
+			})
+
+			if(reminder>0){
+				console.log("reminder chala:");
+				uploadLeftOverArray = imagesToBeUploaded.slice(quotient*3,len);
+				console.log(quotient*3,len)
+				console.log("left over array: ",uploadLeftOverArray);
+				this.props.uploadPhotos(uploadLeftOverArray);
+			}
+		
 	}
 
 	closeToast(string,holdTime){
@@ -89,7 +112,6 @@ class Profile extends Component {
 			if(user_data.email === this.props.match.params.email){
 			 this.closeToast("Welcome " + user_data.email,2500);
 			}
-			this.props.getImagesOnEmail(this.props.match.params.email);
 		}
 		else{
 			this.closeToast("Login To Upload Photos!! Viewing is allowed without login ", 4000);
