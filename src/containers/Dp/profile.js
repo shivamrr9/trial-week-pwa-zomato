@@ -350,7 +350,7 @@ class Profile extends Component {
 									this.props.getImagesPayload.map((listViewObj)=>{
 										return (<div style={{width:'100%',height:'140px',boxShadow: '2px 2px 2px 2px #E0E0E0', border:'1px solid #E0E0E0'}}>
 											<img style={{width:'50%',height:'160px'}} src={listViewObj.thumbnail} alt="list-view-photos"/>
-											{/* printting of tags here */}
+											<span><b>Associated Tags: </b>{listViewObj && listViewObj.caption ? listViewObj.caption : 'No Tags Present'}</span>
 											<span>
 											<Checkbox
 												style={{float:'right'}}

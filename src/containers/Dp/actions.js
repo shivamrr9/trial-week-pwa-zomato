@@ -259,7 +259,7 @@ export function getImagesOnEmail(emailToGetImages){
           obj.thumbnail = obj.imageUrl;
           obj.thumbnailWidth= 300;
           obj.thumbnailHeight= 200;
-          obj.caption ="Tags:"+obj.tag.toString();
+          obj.caption =obj.tag.toString();
           obj.isSelected = false;
        })
        dispatch({
