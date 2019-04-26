@@ -259,14 +259,8 @@ export function getImagesOnEmail(emailToGetImages){
           obj.thumbnail = obj.imageUrl;
           obj.thumbnailWidth= 300;
           obj.thumbnailHeight= 200;
-          obj.caption = "Images of "+obj.email;
+          obj.caption ="Tags:"+obj.tag.toString();
           obj.isSelected = false;
-          // obj.tag.map((tagObj)=>{
-          //   if(obj && obj.tag && obj.tag.length){
-          //   tagsArray.push({"value": tagObj , "title": tagObj});
-          // }
-          // });
-          // obj.tags = tagsArray;
        })
        dispatch({
          type: Constants.LOADING_IMAGES_RESPONSE,
